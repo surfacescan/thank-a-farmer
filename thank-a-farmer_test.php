@@ -2,6 +2,7 @@
 //First we include the Tropo WebAPI classes.
 include_once('lib/TropoClasses.php');
 require('lib/limonade.php');
+require('config.php');
  
 
   //$cmd = "/home/ec2-user/.rvm/rubies/ruby-2.0.0-p247/bin/ruby ./push_to_soundcloud.rb af898428acb39380093c52c61433ab89.wav";
@@ -9,9 +10,9 @@ require('lib/limonade.php');
   //exec($cmd);
  
 function connectToMySQL(){
-  $db_user = "root";
-  $db_pass = "1404scottFRI";
-  $db_db = "tropo";
+  $db_user = USERNAME;
+  $db_pass = PASS;
+  $db_db = DB;
   mysql_connect("localhost", $db_user, $db_pass) or die("ERROR: MySQL cannot connect.");
   mysql_select_db($db_db) or die("ERROR: MySQL cannot select database.");
 } 
