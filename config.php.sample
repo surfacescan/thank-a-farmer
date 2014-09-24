@@ -1,0 +1,7 @@
+<?php
+
+define("USERNAME", "root"); 
+define("PASS", "");
+define("DB", "tropo");
+
+?>
