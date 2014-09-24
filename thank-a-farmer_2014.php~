@@ -88,12 +88,12 @@ function app_start() {
   } 
    if($callerage == "Age (optional)") $callerage="-";
    
-  $tropo->say("http://aws.farmradio.org/thank-a-farmer/prompts/2014/ThankAFarmer_bilingualintro_part_1.wav");
+  $tropo->say("http://aws.farmradio.org/thank-a-farmer/prompts/ThankAFarmer_bilingualintro_part_1.wav");
   $options = array("choices" => "[1 DIGIT]", "name" => "digit", "mode"=>"dtmf","attempts"=>2,'bargein' => 'true', "timeout" => 7); 
-  $tropo->ask("http://aws.farmradio.org/thank-a-farmer/prompts/2014/ThankAFarmer_bilingualintro_part_2.wav", $options);
+  $tropo->ask("http://aws.farmradio.org/thank-a-farmer/prompts/ThankAFarmer_bilingualintro_part_2.wav", $options);
 
-  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=instructions&callerfname=" . $callerfname . "&callerlname=" . $callerlname . "&callernumber=" . $callernumber . "&calleremail=".$calleremail . "&callerage=" . $callerage ."&callercountry=".$callercountry."&callerprovince=".$callerprovince."&callercity=".$callercity."&callerchecked=".$callerchecked . "&callertype=" . $callertype));
-  $tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_2014.php?uri=error"));
+  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=instructions&callerfname=" . $callerfname . "&callerlname=" . $callerlname . "&callernumber=" . $callernumber . "&calleremail=".$calleremail . "&callerage=" . $callerage ."&callercountry=".$callercountry."&callerprovince=".$callerprovince."&callercity=".$callercity."&callerchecked=".$callerchecked . "&callertype=" . $callertype));
+  $tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_test.php?uri=error"));
 
   $tropo->RenderJson();
  }
@@ -133,8 +133,8 @@ function app_instructions() {
 	
    
 	 
-	$tropo->say("http://aws.farmradio.org/thank-a-farmer/prompts/2014/ThankAFarmer_" . $language . "_instructions.wav");
-    $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=record&lang=".$language));
+	$tropo->say("http://aws.farmradio.org/thank-a-farmer/prompts/ThankAFarmer_" . $language . "_instructions.wav");
+    $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=record&lang=".$language));
     $tropo->RenderJson();
 }
   
@@ -152,7 +152,7 @@ function app_record() {
   
   $tropo->record(array(
     'name' => 'recording',
-    'say' => 'http://aws.farmradio.org/thank-a-farmer/prompts/2014/ThankAFarmer_' .$language. '_rec_prompt.wav',
+    'say' => 'http://aws.farmradio.org/thank-a-farmer/prompts/ThankAFarmer_' .$language. '_rec_prompt.wav',
     'url' => 'http://aws.farmradio.org/recordings/recording.php?name='.$call_id,
 	'terminator' => '#',
     'bargein' => 'false',
@@ -165,15 +165,15 @@ function app_record() {
   ));
   
   if($language == 'en')
-     $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=listen&lang=".$language, "say" => "Thank you, here is the message you have just recorded."));
+     $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=listen&lang=".$language, "say" => "Thank you, here is the message you have just recorded."));
   elseif($language == 'fr')
-     $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=listen&lang=".$language, "say" => "Merci, voici votre message:", "voice"=>"Charlotte"));
+     $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=listen&lang=".$language, "say" => "Merci, voici votre message:", "voice"=>"Charlotte"));
 	 
 
-     $tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_2014.php?uri=error&lang=".$language)); 
-     $tropo->on(array("event" => "hangup", "next" => "thank-a-farmer_2014.php?uri=hangup")); 
+     $tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_test.php?uri=error&lang=".$language)); 
+     $tropo->on(array("event" => "hangup", "next" => "thank-a-farmer_test.php?uri=hangup")); 
 	 
-  //$tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_2014.php?uri=error&lang=".$language));
+  //$tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_test.php?uri=error&lang=".$language));
   
   $tropo->RenderJson(); 
 }
@@ -186,7 +186,7 @@ function app_listen() {
 
   $call_id = $result->getCallId();
   $tropo->say("http://aws.farmradio.org/recordings/".$call_id.".wav");
-  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=give_prompt&lang=" . $language));
+  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=give_prompt&lang=" . $language));
 
   $tropo->renderJSON();
 } 
@@ -201,9 +201,9 @@ function app_give_prompt() {
   $call_id = $result->getCallId();
   
   $options = array("choices" => "[1 DIGIT],#", "name" => "digit", "mode"=>"dtmf","terminator"=>"*", "attempts"=>2,'bargein' => 'true', "timeout" => 5); 
-  $tropo->ask("http://aws.farmradio.org/thank-a-farmer/prompts/2014/ThankAFarmer_" . $language . "_2.wav", $options);
-  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=get_prompt&lang=" . $language));
-  $tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_2014.php?uri=error&lang=" . $language));
+  $tropo->ask("http://aws.farmradio.org/thank-a-farmer/prompts/ThankAFarmer_" . $language . "_2.wav", $options);
+  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=get_prompt&lang=" . $language));
+  $tropo->on(array("event" => "incomplete", "next" => "thank-a-farmer_test.php?uri=error&lang=" . $language));
   
   $tropo->renderJSON();
 } 
@@ -220,7 +220,7 @@ function app_get_prompt() {
   if($answer == 1) $action = "listen";
   if($answer == 2) $action = "record";
 
-  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_2014.php?uri=" . $action . "&lang=" . $language));
+  $tropo->on(array("event" => "continue", "next" => "thank-a-farmer_test.php?uri=" . $action . "&lang=" . $language));
   
   $tropo->renderJSON();
 }
@@ -239,8 +239,15 @@ function app_finish() {
   
   mysql_query("INSERT INTO `recordings` (callId, recording_url, rec_type) VALUES ('".$call_id."', 'http://aws.farmradio.org/recordings/".$call_id.".wav','saved')");
   
+// Push the recording to Soundcloud account
+ 
+ //$cmd = "/usr/bin/ruby ./push_to_soundcloud.rb af898428acb39380093c52c61433ab89.wav";
+ // $cmd = "/usr/bin/ruby ./push_to_soundcloud.rb " . $call_id . ".wav";
+ //exec($cmd);
   
-  $tropo->say("http://aws.farmradio.org/thank-a-farmer/prompts/2014/ThankAFarmer_" . $language . "_3.wav");
+  // Send a couple emails?
+  
+  $tropo->say("http://aws.farmradio.org/thank-a-farmer/prompts/ThankAFarmer_" . $language . "_3.wav");
   
   
   
@@ -300,4 +307,4 @@ dispatch_post('/hangup', 'app_hangup');
 
 
 run();
-?>
+?>  
